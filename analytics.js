@@ -14,7 +14,7 @@
     window.ym = window.ym || function(){(window.ym.a=window.ym.a||[]).push(arguments);};
     window.ym.l = Date.now();
     const script=document.createElement('script');script.async=true;script.src='https://mc.yandex.ru/metrika/tag.js';document.head.append(script);
-    window.ym(counter,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
+    window.ym(counter,'init',{defer:true,clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
   }
   function track(event, data={}) {
     if (!allowed.has(event)) throw new Error('Unknown event: '+event);
@@ -31,5 +31,12 @@
     window.dispatchEvent(new CustomEvent('lab:event',{detail:row}));
     return row;
   }
-  window.labAnalytics={track,test,sessionId,connected:!!counter&&!test};
+  let lastPage='';
+  function pageView() {
+    const url=location.origin+location.pathname+location.hash;
+    if(url===lastPage)return;
+    if(counter&&!test)window.ym(counter,'hit',url,{title:document.title,referer:lastPage||document.referrer});
+    lastPage=url;
+  }
+  window.labAnalytics={track,pageView,test,sessionId,connected:!!counter&&!test};
 })();

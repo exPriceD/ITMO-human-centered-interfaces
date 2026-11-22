@@ -1,2 +1,2 @@
-// Номер реального счётчика задаётся после его создания в Яндекс.Метрике.
-window.LAB_CONFIG = {metrikaId: 0, version: '1.0.0'};
+// Счётчик учебного сайта на GitHub Pages.
+window.LAB_CONFIG = {metrikaId: 114507449, version: '1.0.1'};
