@@ -9,6 +9,7 @@
   const sessionId = previous && now-previous < 30*60*1000 ? get(sessionStorage,'pp_session',id()) : id();
   put(sessionStorage,'pp_session',sessionId);put(sessionStorage,'pp_last',String(now));
   const test = new URLSearchParams(location.search).get('test') === '1';
+  const setupCheck = new URLSearchParams(location.search).get('verification') === '1';
   const counter = Number(window.LAB_CONFIG?.metrikaId)||0;
   if (counter && !test) {
     window.ym = window.ym || function(){(window.ym.a=window.ym.a||[]).push(arguments);};
@@ -27,7 +28,7 @@
     let rows=[];try{rows=JSON.parse(get(localStorage,'pp_events','[]'));}catch{}
     rows.push(row);put(localStorage,'pp_events',JSON.stringify(rows.slice(-1500)));
     put(sessionStorage,'pp_last',String(Date.now()));
-    if(counter && !test) window.ym(counter,'reachGoal',event,{...properties,lab_version:row.version});
+    if(counter && !test) window.ym(counter,'reachGoal',event,{...properties,lab_version:row.version,setup_check:setupCheck});
     window.dispatchEvent(new CustomEvent('lab:event',{detail:row}));
     return row;
   }
@@ -35,7 +36,7 @@
   function pageView() {
     const url=location.origin+location.pathname+location.hash;
     if(url===lastPage)return;
-    if(counter&&!test)window.ym(counter,'hit',url,{title:document.title,referer:lastPage||document.referrer});
+    if(counter&&!test)window.ym(counter,'hit',url,{title:document.title,referer:lastPage||document.referrer,params:{setup_check:setupCheck}});
     lastPage=url;
   }
   window.labAnalytics={track,pageView,test,sessionId,connected:!!counter&&!test};
